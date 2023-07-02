@@ -48,6 +48,9 @@ public final class ArmPosWidget extends SimpleAnnotatedWidget<ArmPos> {
     canvas.heightProperty().addListener(evt -> resizeCanvas());
 
     // Redraw on data change
+    // $TODO - We only redraw arm when a new networktables value is sent over the wire.
+    // That means the movement animation can be jerky.  An improvement would be
+    // to draw on each JavaFX frame, and move the arm more smoothly.
     dataProperty().addListener((newValue) -> redraw());
   }
 
