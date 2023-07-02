@@ -1,0 +1,41 @@
+plugins {
+    id 'java-library'
+    id 'edu.wpi.first.WpilibTools' version '0.7.1'
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        name = "WPILib"
+        setUrl("https://frcmaven.wpi.edu/artifactory/release")
+    }
+}
+
+dependencies {
+    configurations {
+        javaFxDeps
+    }
+
+    configurations.compileOnly.extendsFrom(configurations.javaFxDeps)
+
+    javaFxDeps wpilibTools.deps.javafx("base")
+    javaFxDeps wpilibTools.deps.javafx("controls")
+    javaFxDeps wpilibTools.deps.javafx("fxml")
+    javaFxDeps wpilibTools.deps.javafx("graphics")
+
+    compileOnly group: "edu.wpi.first.shuffleboard", name: "api", version: "2020.+"
+    compileOnly group: "edu.wpi.first.shuffleboard.plugin", name: "networktables", version: "2020.+"
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.8.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+
+    testImplementation "org.mockito:mockito-core:3.+"
+}
+
+tasks.register("installPlugin", Copy) {
+    from(tasks.named("jar"))
+    into("${System.getProperty("user.home")}/Shuffleboard/plugins")
+    description = "Builds the plugin JAR and installs it in the Shuffleboard plugins directory."
+    group = "Shuffleboard Plugin"
+}
