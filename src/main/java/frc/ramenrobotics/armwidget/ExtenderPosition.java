@@ -17,6 +17,13 @@ public class ExtenderPosition {
     m_isClawOpen = isClawOpen;
   }
 
+  /**
+  * Copy method.
+  */
+  public ExtenderPosition copy() {
+    return new ExtenderPosition(m_extendedPercent, m_isClawOpen);
+  }
+
   @Override
   public boolean equals(Object obj) {
     if (obj == this) {

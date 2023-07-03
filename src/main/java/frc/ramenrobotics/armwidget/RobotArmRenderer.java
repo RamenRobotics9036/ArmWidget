@@ -40,6 +40,9 @@ public class RobotArmRenderer {
         && m_lastExtenderPosition.equals(newExtenderPosition);
   }
 
+  // $TODO - Base and arm are currently drawn onto a NEW pane that we create, and then
+  // convert to a bitmap/Image that this method returns.  This double-buffering is
+  // unecessary, and drawing may be a bit more efficient if I drew directly to smallCanvas
   private Image redrawRobotArm(
       ArmPosition armPosition,
       ExtenderPosition extenderPosition) {
@@ -111,8 +114,8 @@ public class RobotArmRenderer {
     else {
       resultImage = redrawRobotArm(armPosition, extenderPosition);
       m_cachedImage = resultImage;
-      m_lastArmPosition = armPosition;
-      m_lastExtenderPosition = extenderPosition;
+      m_lastArmPosition = armPosition.copy();
+      m_lastExtenderPosition = extenderPosition.copy();
     }
 
     return resultImage;

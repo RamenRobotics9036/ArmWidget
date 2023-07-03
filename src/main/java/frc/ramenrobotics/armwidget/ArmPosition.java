@@ -15,6 +15,13 @@ public class ArmPosition {
     m_raisedPercent = raisedPercent;
   }
 
+  /**
+  * Copy method.
+  */
+  public ArmPosition copy() {
+    return new ArmPosition(m_raisedPercent);
+  }
+
   @Override
   public boolean equals(Object obj) {
     if (obj == this) {
