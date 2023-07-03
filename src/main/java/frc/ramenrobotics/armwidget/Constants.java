@@ -23,4 +23,11 @@ public class Constants {
   // Arm rotation constants
   public static final double kArmDisplayRotationLowest = 50;
   public static final double kArmDisplayRotationHighest = -10;
+
+  // Animation times
+  public static final double ksecondsToFullyExtend = 1;
+  public static final double ksecondsToFullyRaise = 1;
+
+  // Frames per second animation - Stick to 30 or 60
+  public static int kframesPerSecond = 60;
 }

@@ -99,7 +99,7 @@ public class ExtenderAndClaw {
     else {
       resultGroup = getExtenderAndClawImageHelper(position);
       m_cachedGroup = resultGroup;
-      m_lastPosition = position;
+      m_lastPosition = position.copy();
     }
   
     return resultGroup;

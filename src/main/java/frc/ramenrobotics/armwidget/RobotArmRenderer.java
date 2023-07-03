@@ -114,8 +114,8 @@ public class RobotArmRenderer {
     else {
       resultImage = redrawRobotArm(armPosition, extenderPosition);
       m_cachedImage = resultImage;
-      m_lastArmPosition = armPosition;
-      m_lastExtenderPosition = extenderPosition;
+      m_lastArmPosition = armPosition.copy();
+      m_lastExtenderPosition = extenderPosition.copy();
     }
 
     return resultImage;
