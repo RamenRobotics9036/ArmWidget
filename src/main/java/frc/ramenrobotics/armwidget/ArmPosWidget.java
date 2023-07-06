@@ -39,6 +39,9 @@ public final class ArmPosWidget extends SimpleAnnotatedWidget<ArmPos> {
 
   @FXML
   private void initialize() {
+    // $TODO - If you first run the Robot simulation and THEN launch shuffleboard, the robot arm doesn't animate.
+    // My guess is because this code is improperly stopping the animation timer for displayed canvas.
+  
     // The Shuffleboard unfortunately loads multiple instances of the wiget.
     // That means its doing X times the work necessary to draw onto the same canvas!
     // As a hack, we delete notifications to old instances of ArmPosWidget, so
