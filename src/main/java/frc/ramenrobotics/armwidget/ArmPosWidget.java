@@ -7,6 +7,7 @@ import frc.ramenrobotics.ArmDrawHelper;
 import javafx.animation.AnimationTimer;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.Pane;
 
@@ -20,9 +21,9 @@ import javafx.scene.layout.Pane;
 public final class ArmPosWidget extends SimpleAnnotatedWidget<ArmPos> {
   private double m_tileWidth;
   private double m_tileHeight;
-  private static ChangeListener<Number> m_sizeListener = null;
-  private static ChangeListener<Object> m_dataChangeListener = null;
-  private static AnimationTimer m_timer = null;
+  private ChangeListener<Number> m_sizeListener = null;
+  private ChangeListener<Object> m_dataChangeListener = null;
+  private AnimationTimer m_timer = null;
   private ArmDrawHelper m_armDrawHelper;
 
   @FXML
@@ -39,31 +40,6 @@ public final class ArmPosWidget extends SimpleAnnotatedWidget<ArmPos> {
 
   @FXML
   private void initialize() {
-    // $TODO - If you first run the Robot simulation and THEN launch shuffleboard, the robot arm doesn't animate.
-    // My guess is because this code is improperly stopping the animation timer for displayed canvas.
-  
-    // The Shuffleboard unfortunately loads multiple instances of the wiget.
-    // That means its doing X times the work necessary to draw onto the same canvas!
-    // As a hack, we delete notifications to old instances of ArmPosWidget, so
-    // that only the latest instance will actually draw.
-    // The downside to this hack is that I cant instantiate
-    // multiple instances of the Arm widget.
-    if (m_timer != null) {
-      m_timer.stop();
-      m_timer = null;
-    }
-
-    if (m_sizeListener != null) {
-      canvas.widthProperty().removeListener(m_sizeListener);
-      canvas.heightProperty().removeListener(m_sizeListener);
-      m_sizeListener = null;
-    }
-
-    if (m_dataChangeListener != null) {
-      dataProperty().removeListener(m_dataChangeListener);
-      m_dataChangeListener = null;
-    }
-
     // Create listeners
     m_sizeListener = (observable, oldValue, newValue) -> resizeCanvas();
     m_dataChangeListener = (observable, oldValue, newValue) -> markDirty();
@@ -119,7 +95,33 @@ public final class ArmPosWidget extends SimpleAnnotatedWidget<ArmPos> {
     m_armDrawHelper.markDirty();
   }
 
+  // Only render arm if the canvas is visible.  Otherwise, we waste CPU cycles since there
+  // are multiple instances of the widget loaded, some of which arent visible.
+  private boolean isCanvasVisible() {
+    Scene scene = root.getScene();
+
+    if (scene == null
+        || scene.getWindow() == null
+        || !scene.getWindow().isShowing()) {
+
+      return false;
+    }
+
+    if (canvas == null
+        || !canvas.isVisible()
+        || canvas.getWidth() == 0) {
+
+      return false;
+    }
+
+    return true;
+  }
+
   private void redraw() {
+    if (!isCanvasVisible()) {
+      return;
+    }
+
     // Get arm position from Network Tables
     ArmPos armData = getData();
     ExtenderPosition extenderPosition = new ExtenderPosition(
